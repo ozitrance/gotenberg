@@ -72,6 +72,29 @@ func (engine *QPdf) Merge(ctx context.Context, logger *zap.Logger, inputPaths []
 	return fmt.Errorf("merge PDFs with QPDF: %w", err)
 }
 
+
+// Linearize the PDF for Fast Web.
+func (engine *QPdf) Linearize(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error {
+	var args []string
+	args = append(args, "--linearize")
+	// args = append(args, "--pages")
+	args = append(args, inputPaths...)
+	args = append(args, "--", outputPath)
+
+	cmd, err := gotenberg.CommandContext(ctx, logger, engine.binPath, args...)
+
+	if err != nil {
+		return fmt.Errorf("create command: %w", err)
+	}
+
+	_, err = cmd.Exec()
+	if err == nil {
+		return nil
+	}
+
+	return fmt.Errorf("linearize PDFs with QPDF: %w", err)
+}
+
 // Convert is not available in this implementation.
 func (engine *QPdf) Convert(ctx context.Context, logger *zap.Logger, formats gotenberg.PdfFormats, inputPath, outputPath string) error {
 	return fmt.Errorf("convert PDF to '%+v' with QPDF: %w", formats, gotenberg.ErrPdfEngineMethodNotSupported)

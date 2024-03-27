@@ -49,6 +49,11 @@ func (engine *PdfCpu) Merge(ctx context.Context, logger *zap.Logger, inputPaths 
 	return fmt.Errorf("merge PDFs with PDFcpu: %w", err)
 }
 
+// Linearize is not available in this implementation.
+func (engine *PdfCpu) Linearize(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error {
+	return fmt.Errorf("Linearize PDF to '%+v' with PDFcpu: %w", gotenberg.ErrPdfEngineMethodNotSupported)
+}
+
 // Convert is not available in this implementation.
 func (engine *PdfCpu) Convert(ctx context.Context, logger *zap.Logger, formats gotenberg.PdfFormats, inputPath, outputPath string) error {
 	return fmt.Errorf("convert PDF to '%+v' with PDFcpu: %w", formats, gotenberg.ErrPdfEngineMethodNotSupported)
