@@ -187,6 +187,11 @@ RUN \
 # https://github.com/arachnys/athenapdf/issues/69.
 # https://github.com/arachnys/athenapdf/commit/ba25a8d80a25d08d58865519c4cd8756dc9a336d.
 COPY build/fonts.conf /etc/fonts/conf.d/100-gotenberg.conf
+COPY build/cad2x /etc/cad2x
+RUN chmod +x /etc/cad2x/*
+    # Install PDFtk, QPDF & ExifTool (PDF engines).
+    # See https://github.com/gotenberg/gotenberg/pull/273.
+
 
 # Copy the Gotenberg binary from the binary stage.
 COPY --from=binary-stage /home/gotenberg /usr/bin/
@@ -197,6 +202,7 @@ ENV LIBREOFFICE_BIN_PATH /usr/lib/libreoffice/program/soffice.bin
 ENV UNOCONVERTER_BIN_PATH /usr/bin/unoconverter
 ENV PDFTK_BIN_PATH /usr/bin/pdftk
 ENV QPDF_BIN_PATH /usr/bin/qpdf
+ENV CAD2X_BIN_PATH /etc/cad2x/cad2x
 ENV EXIFTOOL_BIN_PATH /usr/bin/exiftool
 
 USER gotenberg

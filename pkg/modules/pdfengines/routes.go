@@ -201,9 +201,9 @@ func convertRoute(engine gotenberg.PdfEngine) api.Route {
 			)
 
 			err := ctx.FormData().
-				MandatoryPaths([]string{".pdf"}, &inputPaths).
-				String("pdfa", &pdfa, "").
-				Bool("pdfua", &pdfua, false).
+				MandatoryPaths([]string{".dwg"}, &inputPaths).
+				// String("pdfa", &pdfa, "").
+				// Bool("pdfua", &pdfua, false).
 				Validate()
 			if err != nil {
 				return fmt.Errorf("validate form data: %w", err)
@@ -214,16 +214,16 @@ func convertRoute(engine gotenberg.PdfEngine) api.Route {
 				PdfUa: pdfua,
 			}
 
-			zeroValued := gotenberg.PdfFormats{}
-			if pdfFormats == zeroValued {
-				return api.WrapError(
-					errors.New("no PDF formats"),
-					api.NewSentinelHttpError(
-						http.StatusBadRequest,
-						"Invalid form data: either 'pdfa' or 'pdfua' form fields must be provided",
-					),
-				)
-			}
+			// zeroValued := gotenberg.PdfFormats{}
+			// if pdfFormats == zeroValued {
+			// 	return api.WrapError(
+			// 		errors.New("no PDF formats"),
+			// 		api.NewSentinelHttpError(
+			// 			http.StatusBadRequest,
+			// 			"Invalid form data: either 'pdfa' or 'pdfua' form fields must be provided",
+			// 		),
+			// 	)
+			// }
 
 			// Alright, let's convert the PDFs.
 			outputPaths := make([]string, len(inputPaths))
