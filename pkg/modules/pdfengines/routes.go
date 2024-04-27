@@ -201,7 +201,7 @@ func convertRoute(engine gotenberg.PdfEngine) api.Route {
 			)
 
 			err := ctx.FormData().
-				MandatoryPaths([]string{".dwg"}, &inputPaths).
+				MandatoryPaths([]string{".dwg",".dxf",".pdf"}, &inputPaths).
 				// String("pdfa", &pdfa, "").
 				// Bool("pdfua", &pdfua, false).
 				Validate()
