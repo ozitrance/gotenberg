@@ -1,0 +1,16 @@
+# fly.toml app configuration file generated for gotenberg000 on 2024-04-28T22:27:57-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'gotenberg000'
+primary_region = 'lax'
+
+[build]
+  image = 'ozitrance/gotenberg:0.1'
+
+[env]
+  PORT = '3000'
+
+[[vm]]
+  size = 'shared-cpu-1x'

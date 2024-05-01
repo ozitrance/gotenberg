@@ -212,4 +212,4 @@ WORKDIR /home/gotenberg
 EXPOSE 3000
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
-CMD [ "gotenberg" ]
+CMD [ "gotenberg", "--api-timeout", "60s", "--pdfengines-engines", "qpdf,cad2x,libreoffice-pdfengine,exiftool,pdftk,pdfcpu" ]
