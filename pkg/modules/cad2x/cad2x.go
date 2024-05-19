@@ -60,10 +60,9 @@ func (engine *Cad2X) Merge(ctx context.Context, logger *zap.Logger, inputPaths [
 // Convert DWG/DXF to PDF.
 func (engine *Cad2X) Convert(ctx context.Context, logger *zap.Logger, formats gotenberg.PdfFormats, inputPath, outputPath string) error {
 	var args []string
-	args = append(args, "--outfile", outputPath)
-	// args = append(args, "--pages")
+	args = append(args, "-o", outputPath)
 	args = append(args, inputPath)
-	args = append(args, "-ac")
+	args = append(args, "-abc")
 
 	cmd, err := gotenberg.CommandContext(ctx, logger, engine.binPath, args...)
 
