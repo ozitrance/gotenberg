@@ -63,6 +63,59 @@ func TestFormDataChromiumOptions(t *testing.T) {
 			}(),
 		},
 		{
+			scenario: "invalid cookies form field",
+			ctx: func() *api.ContextMock {
+				ctx := &api.ContextMock{Context: new(api.Context)}
+				ctx.SetValues(map[string][]string{
+					"cookies": {
+						"foo",
+					},
+				})
+				return ctx
+			}(),
+			expectedOptions: DefaultOptions(),
+		},
+		{
+			scenario: "invalid cookies form field (missing required values)",
+			ctx: func() *api.ContextMock {
+				ctx := &api.ContextMock{Context: new(api.Context)}
+				ctx.SetValues(map[string][]string{
+					"cookies": {
+						"[{}]",
+					},
+				})
+				return ctx
+			}(),
+			expectedOptions: func() Options {
+				options := DefaultOptions()
+				// No validation in this method, so it still instantiates
+				// an empty item.
+				options.Cookies = []Cookie{{}}
+				return options
+			}(),
+		},
+		{
+			scenario: "valid cookies form field",
+			ctx: func() *api.ContextMock {
+				ctx := &api.ContextMock{Context: new(api.Context)}
+				ctx.SetValues(map[string][]string{
+					"cookies": {
+						`[{"name":"foo","value":"bar","domain":".foo.bar"}]`,
+					},
+				})
+				return ctx
+			}(),
+			expectedOptions: func() Options {
+				options := DefaultOptions()
+				options.Cookies = []Cookie{{
+					Name:   "foo",
+					Value:  "bar",
+					Domain: ".foo.bar",
+				}}
+				return options
+			}(),
+		},
+		{
 			scenario: "invalid extraHttpHeaders form field",
 			ctx: func() *api.ContextMock {
 				ctx := &api.ContextMock{Context: new(api.Context)}
@@ -332,6 +385,15 @@ func TestFormDataChromiumScreenshotOptions(t *testing.T) {
 			ctx: func() *api.ContextMock {
 				ctx := &api.ContextMock{Context: new(api.Context)}
 				ctx.SetValues(map[string][]string{
+					"width": {
+						"1280",
+					},
+					"height": {
+						"800",
+					},
+					"clip": {
+						"true",
+					},
 					"optimizeForSpeed": {
 						"true",
 					},
@@ -343,6 +405,9 @@ func TestFormDataChromiumScreenshotOptions(t *testing.T) {
 			}(),
 			expectedOptions: func() ScreenshotOptions {
 				options := DefaultScreenshotOptions()
+				options.Width = 1280
+				options.Height = 800
+				options.Clip = true
 				options.OptimizeForSpeed = true
 				options.EmulatedMediaType = "screen"
 				return options
@@ -1371,6 +1436,18 @@ func TestConvertUrl(t *testing.T) {
 			expectOutputPathsCount: 0,
 		},
 		{
+			scenario: "ErrConnectionRefused",
+			ctx:      &api.ContextMock{Context: new(api.Context)},
+			api: &ApiMock{PdfMock: func(ctx context.Context, logger *zap.Logger, url, outputPath string, options PdfOptions) error {
+				return ErrConnectionRefused
+			}},
+			options:                DefaultPdfOptions(),
+			expectError:            true,
+			expectHttpError:        true,
+			expectHttpStatus:       http.StatusBadRequest,
+			expectOutputPathsCount: 0,
+		},
+		{
 			scenario: "error from Chromium",
 			ctx:      &api.ContextMock{Context: new(api.Context)},
 			api: &ApiMock{PdfMock: func(ctx context.Context, logger *zap.Logger, url, outputPath string, options PdfOptions) error {
@@ -1566,6 +1643,18 @@ func TestScreenshotUrl(t *testing.T) {
 			expectError:            true,
 			expectHttpError:        true,
 			expectHttpStatus:       http.StatusConflict,
+			expectOutputPathsCount: 0,
+		},
+		{
+			scenario: "ErrConnectionRefused",
+			ctx:      &api.ContextMock{Context: new(api.Context)},
+			api: &ApiMock{ScreenshotMock: func(ctx context.Context, logger *zap.Logger, url, outputPath string, options ScreenshotOptions) error {
+				return ErrConnectionRefused
+			}},
+			options:                DefaultScreenshotOptions(),
+			expectError:            true,
+			expectHttpError:        true,
+			expectHttpStatus:       http.StatusBadRequest,
 			expectOutputPathsCount: 0,
 		},
 		{

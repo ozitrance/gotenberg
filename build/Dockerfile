@@ -10,7 +10,7 @@ FROM golang:1.22 AS binary-stage
 # FROM golang:$GOLANG_VERSION AS binary-stage
 
 ARG GOTENBERG_VERSION
-ENV CGO_ENABLED 0
+ENV CGO_ENABLED=0
 
 # Define the working directory outside of $GOPATH (we're using go modules).
 WORKDIR /home

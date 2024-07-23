@@ -34,6 +34,8 @@ func FormDataChromiumOptions(ctx *api.Context) (*api.FormData, Options) {
 		waitDelay               time.Duration
 		waitWindowStatus        string
 		waitForExpression       string
+		cookies                 []Cookie
+		userAgent               string
 		extraHttpHeaders        map[string]string
 		emulatedMediaType       string
 		omitBackground          bool
@@ -58,6 +60,26 @@ func FormDataChromiumOptions(ctx *api.Context) (*api.FormData, Options) {
 		Duration("waitDelay", &waitDelay, defaultOptions.WaitDelay).
 		String("waitWindowStatus", &waitWindowStatus, defaultOptions.WaitWindowStatus).
 		String("waitForExpression", &waitForExpression, defaultOptions.WaitForExpression).
+		Custom("cookies", func(value string) error {
+			if value == "" {
+				cookies = defaultOptions.Cookies
+				return nil
+			}
+
+			err := json.Unmarshal([]byte(value), &cookies)
+			if err != nil {
+				return fmt.Errorf("unmarshal cookies: %w", err)
+			}
+
+			for i, cookie := range cookies {
+				if strings.TrimSpace(cookie.Name) == "" || strings.TrimSpace(cookie.Value) == "" || strings.TrimSpace(cookie.Domain) == "" {
+					err = multierr.Append(err, fmt.Errorf("cookie %d must have its name, value and domain set", i))
+				}
+			}
+
+			return err
+		}).
+		String("userAgent", &userAgent, defaultOptions.UserAgent).
 		Custom("extraHttpHeaders", func(value string) error {
 			if value == "" {
 				extraHttpHeaders = defaultOptions.ExtraHttpHeaders
@@ -94,6 +116,8 @@ func FormDataChromiumOptions(ctx *api.Context) (*api.FormData, Options) {
 		WaitDelay:               waitDelay,
 		WaitWindowStatus:        waitWindowStatus,
 		WaitForExpression:       waitForExpression,
+		Cookies:                 cookies,
+		UserAgent:               userAgent,
 		ExtraHttpHeaders:        extraHttpHeaders,
 		EmulatedMediaType:       emulatedMediaType,
 		OmitBackground:          omitBackground,
@@ -161,12 +185,17 @@ func FormDataChromiumScreenshotOptions(ctx *api.Context) (*api.FormData, Screens
 	defaultScreenshotOptions := DefaultScreenshotOptions()
 
 	var (
+		width, height    int
+		clip             bool
 		format           string
 		quality          int
 		optimizeForSpeed bool
 	)
 
 	form.
+		Int("width", &width, defaultScreenshotOptions.Width).
+		Int("height", &height, defaultScreenshotOptions.Height).
+		Bool("clip", &clip, defaultScreenshotOptions.Clip).
 		Custom("format", func(value string) error {
 			if value == "" {
 				format = defaultScreenshotOptions.Format
@@ -207,6 +236,9 @@ func FormDataChromiumScreenshotOptions(ctx *api.Context) (*api.FormData, Screens
 
 	screenshotOptions := ScreenshotOptions{
 		Options:          options,
+		Width:            width,
+		Height:           height,
+		Clip:             clip,
 		Format:           format,
 		Quality:          quality,
 		OptimizeForSpeed: optimizeForSpeed,
@@ -652,6 +684,16 @@ func handleChromiumError(err error, options Options) error {
 			api.NewSentinelHttpError(
 				http.StatusConflict,
 				fmt.Sprintf("Chromium console exceptions:\n %s", strings.ReplaceAll(err.Error(), ErrConsoleExceptions.Error(), "")),
+			),
+		)
+	}
+
+	if errors.Is(err, ErrConnectionRefused) {
+		return api.WrapError(
+			err,
+			api.NewSentinelHttpError(
+				http.StatusBadRequest,
+				"Chromium returned net::ERR_CONNECTION_REFUSED",
 			),
 		)
 	}
