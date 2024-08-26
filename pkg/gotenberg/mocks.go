@@ -37,6 +37,7 @@ func (mod *ValidatorMock) Validate() error {
 type PdfEngineMock struct {
 	MergeMock         func(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error
 	LinearizeMock     func(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error
+	ThumbnailMock     func(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error
 	ConvertMock       func(ctx context.Context, logger *zap.Logger, formats PdfFormats, inputPath, outputPath string) error
 	ReadMetadataMock  func(ctx context.Context, logger *zap.Logger, inputPath string) (map[string]interface{}, error)
 	WriteMetadataMock func(ctx context.Context, logger *zap.Logger, metadata map[string]interface{}, inputPath string) error
@@ -48,6 +49,10 @@ func (engine *PdfEngineMock) Merge(ctx context.Context, logger *zap.Logger, inpu
 
 func (engine *PdfEngineMock) Linearize(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error {
 	return engine.LinearizeMock(ctx, logger, inputPaths, outputPath)
+}
+
+func (engine *PdfEngineMock) Thumbnail(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error {
+	return engine.ThumbnailMock(ctx, logger, inputPaths, outputPath, page)
 }
 
 func (engine *PdfEngineMock) Convert(ctx context.Context, logger *zap.Logger, formats PdfFormats, inputPath, outputPath string) error {

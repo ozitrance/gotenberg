@@ -67,7 +67,28 @@ func (multi *multiPdfEngines) Linearize(ctx context.Context, logger *zap.Logger,
 
 	return fmt.Errorf("linearize PDFs with multi PDF engines: %w", err)
 }
+func (multi *multiPdfEngines) Thumbnail(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error {
+	var err error
+	errChan := make(chan error, 1)
 
+	for _, engine := range multi.engines {
+		go func(engine gotenberg.PdfEngine) {
+			errChan <- engine.Thumbnail(ctx, logger, inputPaths, outputPath, page)
+		}(engine)
+
+		select {
+		case thumbnailErr := <-errChan:
+			errored := multierr.AppendInto(&err, thumbnailErr)
+			if !errored {
+				return nil
+			}
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+	}
+
+	return fmt.Errorf("Thumbnail PDFs with multi PDF engines: %w", err)
+}
 
 // Convert converts the given PDF to a specific PDF format. thanks to its
 // children. If the context is done, it stops and returns an error.

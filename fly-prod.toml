@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for gotenberg000 on 2024-04-28T22:27:57-07:00
+# fly.toml app configuration file generated for ms-prod-gotenberg on 2024-07-22T20:43:45-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'gotenberg000'
+app = 'ms-prod-gotenberg'
 primary_region = 'lax'
 
 [build]

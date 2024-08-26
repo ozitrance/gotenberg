@@ -79,6 +79,9 @@ func (engine *PdfTk) Convert(ctx context.Context, logger *zap.Logger, formats go
 func (engine *PdfTk) Linearize(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error {
 	return fmt.Errorf("Linearize PDF to '%+v' with PDFtk: %w", gotenberg.ErrPdfEngineMethodNotSupported)
 }
+func (engine *PdfTk) Thumbnail(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error {
+	return fmt.Errorf("Thumbnail PDF to '%+v' with PdfTk: %w", gotenberg.ErrPdfEngineMethodNotSupported)
+}
 
 // ReadMetadata is not available in this implementation.
 func (engine *PdfTk) ReadMetadata(ctx context.Context, logger *zap.Logger, inputPath string) (map[string]interface{}, error) {

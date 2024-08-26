@@ -15,5 +15,6 @@ import (
 	_ "github.com/gotenberg/gotenberg/v8/pkg/modules/prometheus"
 	_ "github.com/gotenberg/gotenberg/v8/pkg/modules/qpdf"
 	_ "github.com/gotenberg/gotenberg/v8/pkg/modules/cad2x"
+	_ "github.com/gotenberg/gotenberg/v8/pkg/modules/pdftocairo"
 	_ "github.com/gotenberg/gotenberg/v8/pkg/modules/webhook"
 )

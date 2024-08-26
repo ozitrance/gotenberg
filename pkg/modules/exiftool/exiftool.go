@@ -61,6 +61,10 @@ func (engine *ExifTool) Merge(ctx context.Context, logger *zap.Logger, inputPath
 func (engine *ExifTool) Linearize(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error {
 	return fmt.Errorf("linearize PDFs with ExifTool: %w", gotenberg.ErrPdfEngineMethodNotSupported)
 }
+func (engine *ExifTool) Thumbnail(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error {
+	return fmt.Errorf("Thumbnail PDF to '%+v' with ExifTool: %w", gotenberg.ErrPdfEngineMethodNotSupported)
+}
+
 
 // Convert is not available in this implementation.
 func (engine *ExifTool) Convert(ctx context.Context, logger *zap.Logger, formats gotenberg.PdfFormats, inputPath, outputPath string) error {

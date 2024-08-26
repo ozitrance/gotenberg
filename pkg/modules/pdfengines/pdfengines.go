@@ -168,6 +168,7 @@ func (mod *PdfEngines) Routes() ([]api.Route, error) {
 	return []api.Route{
 		mergeRoute(engine),
 		linearizeRoute(engine),
+		thumbnailRoute(engine),
 		convertRoute(engine),
 		readMetadataRoute(engine),
 		writeMetadataRoute(engine),

@@ -72,6 +72,10 @@ func (engine *QPdf) Merge(ctx context.Context, logger *zap.Logger, inputPaths []
 	return fmt.Errorf("merge PDFs with QPDF: %w", err)
 }
 
+func (engine *QPdf) Thumbnail(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error {
+	return fmt.Errorf("Thumbnail PDF to '%+v' with QPdf: %w", gotenberg.ErrPdfEngineMethodNotSupported)
+}
+
 
 // Linearize the PDF for Fast Web.
 func (engine *QPdf) Linearize(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error {

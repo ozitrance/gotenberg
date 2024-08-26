@@ -53,6 +53,10 @@ func (engine *PdfCpu) Merge(ctx context.Context, logger *zap.Logger, inputPaths 
 func (engine *PdfCpu) Linearize(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error {
 	return fmt.Errorf("Linearize PDF to '%+v' with PDFcpu: %w", gotenberg.ErrPdfEngineMethodNotSupported)
 }
+func (engine *PdfCpu) Thumbnail(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error {
+	return fmt.Errorf("Thumbnail PDF to '%+v' with PdfCpu: %w", gotenberg.ErrPdfEngineMethodNotSupported)
+}
+
 
 // Convert is not available in this implementation.
 func (engine *PdfCpu) Convert(ctx context.Context, logger *zap.Logger, formats gotenberg.PdfFormats, inputPath, outputPath string) error {

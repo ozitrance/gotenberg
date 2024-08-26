@@ -83,6 +83,10 @@ func (engine *Cad2X) Linearize(ctx context.Context, logger *zap.Logger, inputPat
 	return fmt.Errorf("Linearize PDF to '%+v' with Cad2X: %w", gotenberg.ErrPdfEngineMethodNotSupported)
 }
 
+func (engine *Cad2X) Thumbnail(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error {
+	return fmt.Errorf("Thumbnail PDF to '%+v' with Cad2X: %w", gotenberg.ErrPdfEngineMethodNotSupported)
+}
+
 // ReadMetadata is not available in this implementation.
 func (engine *Cad2X) ReadMetadata(ctx context.Context, logger *zap.Logger, inputPath string) (map[string]interface{}, error) {
 	return nil, fmt.Errorf("read PDF metadata with Cad2X: %w", gotenberg.ErrPdfEngineMethodNotSupported)

@@ -58,7 +58,7 @@ RUN \
     # Install system dependencies required for the next instructions or debugging.
     # Note: tini is a helper for reaping zombie processes.
     apt-get update -qq &&\
-    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends curl gnupg tini python3 default-jre-headless &&\
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends curl  poppler-utils gnupg tini python3 default-jre-headless &&\
     # Cleanup.
     # Note: the Debian image does automatically a clean after each install thanks to a hook.
     # Therefore, there is no need for apt-get clean.
@@ -165,7 +165,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN \
-    # Install PDFtk, QPDF & ExifTool (PDF engines).
+    # Install PDFtk, QPDF, poppler-utils (pdftocairo) & ExifTool (PDF engines).
     # See https://github.com/gotenberg/gotenberg/pull/273.
     curl -o /usr/bin/pdftk-all.jar "https://gitlab.com/api/v4/projects/5024297/packages/generic/pdftk-java/$PDFTK_VERSION/pdftk-all.jar" &&\
     chmod a+x /usr/bin/pdftk-all.jar &&\
@@ -178,7 +178,8 @@ RUN \
     # Verify installations.
     pdftk --version &&\
     qpdf --version &&\
-    exiftool --version &&\
+    exiftool -ver &&\
+    pdftocairo -v &&\
     # Cleanup.
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -202,6 +203,7 @@ ENV LIBREOFFICE_BIN_PATH /usr/lib/libreoffice/program/soffice.bin
 ENV UNOCONVERTER_BIN_PATH /usr/bin/unoconverter
 ENV PDFTK_BIN_PATH /usr/bin/pdftk
 ENV QPDF_BIN_PATH /usr/bin/qpdf
+ENV PDFTOCAIRO_BIN_PATH /usr/bin/pdftocairo
 ENV CAD2X_BIN_PATH /etc/cad2x/cad2x
 ENV EXIFTOOL_BIN_PATH /usr/bin/exiftool
 
@@ -212,4 +214,4 @@ WORKDIR /home/gotenberg
 EXPOSE 3000
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
-CMD [ "gotenberg", "--api-timeout", "60s", "--pdfengines-engines", "qpdf,cad2x,libreoffice-pdfengine,exiftool,pdftk,pdfcpu" ]
+CMD [ "gotenberg", "--api-timeout", "60s", "--pdfengines-engines", "qpdf,pdftocairo,cad2x,libreoffice-pdfengine,exiftool,pdftk,pdfcpu" ]

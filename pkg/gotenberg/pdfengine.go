@@ -66,7 +66,7 @@ type PdfEngine interface {
 	Merge(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error
 
 	Linearize(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error
-
+	Thumbnail(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error
 	// Convert transforms a given PDF to the specified formats defined in
 	// PdfFormats. If no format, it does nothing.
 	Convert(ctx context.Context, logger *zap.Logger, formats PdfFormats, inputPath, outputPath string) error
