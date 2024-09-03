@@ -1,8 +1,10 @@
 (change GOTENBERG-VERSION (gotenberg:8.8.1-c) in Makefile)
 make build
-docker run -p 5000:5000 ozitrance/gotenberg:8.8.1-e gotenberg --api-port 5000 --pdfengines-engines qpdf,pdftocairo,cad2x,libreoffice-pdfengine,exiftool,pdftk,pdfcpu --api-timeout 60s
+docker run -p 5000:5000 ozitrance/gotenberg:8.8.1-f gotenberg --api-port 5000 --pdfengines-engines qpdf,pdftocairo,cad2x,libreoffice-pdfengine,exiftool,pdftk,pdfcpu --api-timeout 60s
 
 
 TO test (in windows):
 curl --x POST http://localhost:5000/forms/pdfengines/thumbnail --form files=@./ALL-PAIRS.pdf -o lin2 
 curl --x POST http://localhost:5000/forms/pdfengines/linerize --form files=@./ALL-PAIRS.pdf -o lin2.pdf 
+
+curl --x POST http://localhost:5000/forms/pdfengines/png --form files=@./ALL-PAIRS.pdf -o lin2 

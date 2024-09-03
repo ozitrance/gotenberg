@@ -57,6 +57,10 @@ func (engine *PdfCpu) Thumbnail(ctx context.Context, logger *zap.Logger, inputPa
 	return fmt.Errorf("Thumbnail PDF to '%+v' with PdfCpu: %w", gotenberg.ErrPdfEngineMethodNotSupported)
 }
 
+func (engine *PdfCpu) PNG(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string, monochrome bool) error {
+	return fmt.Errorf("PNG PDF to '%+v' with PdfCpu: %w", gotenberg.ErrPdfEngineMethodNotSupported)
+}
+
 
 // Convert is not available in this implementation.
 func (engine *PdfCpu) Convert(ctx context.Context, logger *zap.Logger, formats gotenberg.PdfFormats, inputPath, outputPath string) error {

@@ -38,6 +38,7 @@ type PdfEngineMock struct {
 	MergeMock         func(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error
 	LinearizeMock     func(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string) error
 	ThumbnailMock     func(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error
+	PNGMock     func(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string, monochrome bool) error
 	ConvertMock       func(ctx context.Context, logger *zap.Logger, formats PdfFormats, inputPath, outputPath string) error
 	ReadMetadataMock  func(ctx context.Context, logger *zap.Logger, inputPath string) (map[string]interface{}, error)
 	WriteMetadataMock func(ctx context.Context, logger *zap.Logger, metadata map[string]interface{}, inputPath string) error
@@ -53,6 +54,10 @@ func (engine *PdfEngineMock) Linearize(ctx context.Context, logger *zap.Logger, 
 
 func (engine *PdfEngineMock) Thumbnail(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string) error {
 	return engine.ThumbnailMock(ctx, logger, inputPaths, outputPath, page)
+}
+
+func (engine *PdfEngineMock) PNG(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string, monochrome bool) error {
+	return engine.PNGMock(ctx, logger, inputPaths, outputPath, page, monochrome)
 }
 
 func (engine *PdfEngineMock) Convert(ctx context.Context, logger *zap.Logger, formats PdfFormats, inputPath, outputPath string) error {

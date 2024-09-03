@@ -59,6 +59,10 @@ func (engine *LibreOfficePdfEngine) Thumbnail(ctx context.Context, logger *zap.L
 	return fmt.Errorf("Thumbnail PDF to '%+v' with LibreOfficePdfEngine: %w", gotenberg.ErrPdfEngineMethodNotSupported)
 }
 
+func (engine *LibreOfficePdfEngine) PNG(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string, monochrome bool) error {
+	return fmt.Errorf("PNG PDF to '%+v' with LibreOfficePdfEngine: %w", gotenberg.ErrPdfEngineMethodNotSupported)
+}
+
 
 
 // Convert converts the given PDF to a specific PDF format. Currently, only the

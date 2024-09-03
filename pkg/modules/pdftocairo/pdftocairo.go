@@ -90,6 +90,35 @@ func (engine *PdfToCairo) Thumbnail(ctx context.Context, logger *zap.Logger, inp
 	return fmt.Errorf("Thumbnail PDFs with pdftocairo: %w", err)
 }
 
+// Thumbnail the PDF for Fast Web.
+func (engine *PdfToCairo) PNG(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string, monochrome bool) error {
+	var args []string
+	// args = append(args, "--pages")
+	out := strings.Split(outputPath, ".png")
+	args = append(args, inputPaths...)
+	args = append(args, out[0])
+	args = append(args, "-png")
+	args = append(args, "-f", page)
+	args = append(args, "-l", page)
+	args = append(args, "-singlefile")
+	if monochrome == true {
+		args = append(args, "-mono")
+	}
+
+	cmd, err := gotenberg.CommandContext(ctx, logger, engine.binPath, args...)
+
+	if err != nil {
+		return fmt.Errorf("create command: %w", err, monochrome)
+	}
+
+	_, err = cmd.Exec()
+	if err == nil {
+		return nil
+	}
+
+	return fmt.Errorf("PNG PDFs with pdftocairo: %w", err)
+}
+
 // Convert is not available in this implementation.
 func (engine *PdfToCairo) Convert(ctx context.Context, logger *zap.Logger, formats gotenberg.PdfFormats, inputPath, outputPath string) error {
 	return fmt.Errorf("convert PDF to '%+v' with PdfToCairo: %w", formats, gotenberg.ErrPdfEngineMethodNotSupported)

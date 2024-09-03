@@ -7,7 +7,7 @@ it: build build-tests ## Initialize the development environment
 
 GOLANG_VERSION=1.22
 DOCKER_REPOSITORY=ozitrance
-GOTENBERG_VERSION=8.8.1-e
+GOTENBERG_VERSION=8.8.1-f
 GOTENBERG_USER_GID=1001
 GOTENBERG_USER_UID=1001
 NOTO_COLOR_EMOJI_VERSION=v2.042 # See https://github.com/googlefonts/noto-emoji/releases.

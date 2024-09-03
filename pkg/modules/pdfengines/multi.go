@@ -90,6 +90,30 @@ func (multi *multiPdfEngines) Thumbnail(ctx context.Context, logger *zap.Logger,
 	return fmt.Errorf("Thumbnail PDFs with multi PDF engines: %w", err)
 }
 
+func (multi *multiPdfEngines) PNG(ctx context.Context, logger *zap.Logger, inputPaths []string, outputPath string, page string, monochrome bool) error {
+	var err error
+	errChan := make(chan error, 1)
+
+	for _, engine := range multi.engines {
+		go func(engine gotenberg.PdfEngine) {
+			errChan <- engine.PNG(ctx, logger, inputPaths, outputPath, page, monochrome)
+		}(engine)
+
+		select {
+		case pngErr := <-errChan:
+			errored := multierr.AppendInto(&err, pngErr)
+			if !errored {
+				return nil
+			}
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+	}
+
+	return fmt.Errorf("PNG PDFs with multi PDF engines: %w", err)
+}
+
+
 // Convert converts the given PDF to a specific PDF format. thanks to its
 // children. If the context is done, it stops and returns an error.
 func (multi *multiPdfEngines) Convert(ctx context.Context, logger *zap.Logger, formats gotenberg.PdfFormats, inputPath, outputPath string) error {
